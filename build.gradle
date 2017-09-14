@@ -108,7 +108,7 @@ uploadArchives {
             }
             pom.project {
                 version = "${artifactVersion}"
-                groupId = "${services}"
+                groupId = "${serviceID}"
                 description "UV Provenance service."
             }
         }
