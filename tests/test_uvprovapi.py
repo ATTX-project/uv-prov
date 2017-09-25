@@ -2,7 +2,8 @@ import click
 import unittest
 from uvprov_api.app import create
 from click.testing import CliRunner
-from uvprov_api.uvprovapi import UVProvApplication, number_of_workers
+from uvprov_api.uvprovapi import UVProvApplication, number_of_workers, main
+from mock import patch
 
 
 class TestAPIStart(unittest.TestCase):
@@ -30,7 +31,7 @@ class TestAPIStart(unittest.TestCase):
 
     def test_command(self):
         """Test Running from command line."""
-        @click.command()
+        @click.command('server')
         @click.option('--host')
         def start(host):
             click.echo('{0}'.format(host))
@@ -38,6 +39,12 @@ class TestAPIStart(unittest.TestCase):
         runner = CliRunner()
         result = runner.invoke(start, input=self.host)
         assert not result.exception
+
+    @patch('uvprov_api.uvprovapi.cli')
+    def test_cli(self, mock):
+        """Test if cli was called."""
+        main()
+        self.assertTrue(mock.called)
 
     def running_app(self):
         """Test running app."""

@@ -34,9 +34,13 @@ class Publisher(object):
 
 def prov_job():
     """Update with latest provenance."""
-    activity_data = activity_get_output()
-    workflow_data = workflow_get_output()
-    PUBLISHER = Publisher(broker['host'], broker['user'], broker['pass'], broker['queue'])
-    PUBLISHER.push(json.dumps(activity_data))
-    PUBLISHER.push(json.dumps(workflow_data))
-    app_logger.info('UV Provenance job executed.')
+    try:
+        activity_data = activity_get_output()
+        workflow_data = workflow_get_output()
+        PUBLISHER = Publisher(broker['host'], broker['user'], broker['pass'], broker['queue'])
+        PUBLISHER.push(json.dumps(activity_data))
+        PUBLISHER.push(json.dumps(workflow_data))
+        app_logger.info('UV Provenance job executed.')
+    except Exception as error:
+        app_logger.error('Something with executing the prov_job: {0}'.format(error))
+        raise error

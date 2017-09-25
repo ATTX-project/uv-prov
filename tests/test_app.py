@@ -1,6 +1,6 @@
 # import falcon
 import unittest
-# import httpretty
+import httpretty
 # import requests
 from falcon import testing
 from uvprov_api.app import create
@@ -25,10 +25,12 @@ class appTest(testing.TestCase):
 class TestApp(appTest):
     """Test app is ok."""
 
-    # def test_main(self):
-    #     """Test the server is up and running."""
-    #     response = self.app.get('/')
-    #     assert(response.status_code == 404)
+    @httpretty.activate
+    def test_main(self):
+        """Test the server is up and running."""
+        httpretty.register_uri(httpretty.GET, "http://localhost:4301/", status=404)
+        response = self.simulate_get('/')
+        assert(response.status_code == 404)
 
     # @httpretty.activate
     # def test_activity_ok(self):

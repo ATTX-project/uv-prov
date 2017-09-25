@@ -21,5 +21,5 @@ def create():
     return uvprov_api
 
 
-if __name__ == '__main__':
-    create()
+# if __name__ == '__main__':
+#     create()
