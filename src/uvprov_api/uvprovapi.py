@@ -1,4 +1,4 @@
-from uvprov_api.app import create
+from uvprov_api.app import init_api
 import click
 import schedule
 import time
@@ -28,7 +28,7 @@ def server(host, port, log, workers):
         'daemon': 'True',
         'errorlog': log
     }
-    UVProvApplication(create(), options).run()
+    UVProvApplication(init_api(), options).run()
 
 
 @cli.command('publisher')

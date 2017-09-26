@@ -1,6 +1,6 @@
 import click
 import unittest
-from uvprov_api.app import create
+from uvprov_api.app import init_api
 from click.testing import CliRunner
 from uvprov_api.uvprovapi import UVProvApplication, number_of_workers, main
 from mock import patch
@@ -21,7 +21,7 @@ class TestAPIStart(unittest.TestCase):
             'daemon': 'True',
             'errorlog': self.log
         }
-        self.app = UVProvApplication(create(), options)
+        self.app = UVProvApplication(init_api(), options)
         # propagate the exceptions to the test client
         self.app.testing = True
 

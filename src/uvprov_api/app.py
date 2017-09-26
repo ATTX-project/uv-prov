@@ -7,7 +7,7 @@ from uvprov_api.utils.logs import main_logger
 api_version = "0.2"  # TO DO: Figure out a better way to do versioning
 
 
-def create():
+def init_api():
     """Create the API endpoint."""
     do_activity = Activity()
     do_workflow = Workflow()

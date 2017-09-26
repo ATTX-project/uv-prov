@@ -3,7 +3,7 @@ import unittest
 import httpretty
 # import requests
 from falcon import testing
-from uvprov_api.app import create
+from uvprov_api.app import init_api
 # from wf_api.app import api_version
 # from datetime import datetime
 # from wf_api.utils.db import connect_DB
@@ -15,7 +15,7 @@ class appTest(testing.TestCase):
     def setUp(self):
         """Setting the app up."""
         # self.conn = connect_DB()
-        self.app = create()
+        self.app = init_api()
 
     def tearDown(self):
         """Tearing down the app up."""
