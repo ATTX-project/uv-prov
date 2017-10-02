@@ -7,6 +7,9 @@ import gunicorn.app.base
 from gunicorn.six import iteritems
 from uvprov_api.utils.logs import app_logger
 from uvprov_api.utils.messaging import prov_job
+import os
+
+interval = {'timer': os.environ['QTIME'] if 'QTIME' in os.environ else 30}
 
 
 @click.group()
@@ -35,7 +38,7 @@ def server(host, port, log, workers):
 def publisher():
     """Consuming some messages."""
     app_logger.info('UVProvenance publisher started')
-    schedule.every(30).minutes.do(prov_job)
+    schedule.every(interval["timer"]).minutes.do(prov_job)
     while True:
         schedule.run_pending()
         time.sleep(1)
