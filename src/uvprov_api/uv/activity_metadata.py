@@ -86,7 +86,7 @@ class ActivityGraph(object):
             graph["activity"]["status"] = determine_status(row['status'])
             start_time = datetime.strptime(str(row['activityStart']), '%Y-%m-%d %H:%M:%S')
             graph["activity"]["startTime"] = start_time.strftime('%Y-%m-%dT%H:%M:%S')
-            end_time = datetime.strptime(str(row['activityStart']), '%Y-%m-%d %H:%M:%S')
+            end_time = datetime.strptime(str(row['activityEnd']), '%Y-%m-%d %H:%M:%S')
             graph["activity"]["endTime"] = end_time.strftime('%Y-%m-%dT%H:%M:%S')
             app_logger.info('Construct provenance information for Activity{0}.' .format(row['activityId']))
             activity_list.append(activity_graph)
