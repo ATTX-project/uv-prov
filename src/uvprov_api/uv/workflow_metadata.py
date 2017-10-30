@@ -1,3 +1,5 @@
+import xmltodict
+from HTMLParser import HTMLParser
 from uvprov_api.utils.logs import app_logger
 from uvprov_api.utils.db import connect_DB, empty_workflows_DB
 from uvprov_api.uv.activity_metadata import determine_status
@@ -34,6 +36,7 @@ class WorkflowGraph(object):
         SELECT dpu_instance.id AS 'stepId', dpu_instance.name AS 'stepTitle',
         dpu_instance.description AS 'description',
         dpu_template.name AS 'templateName',
+        dpu_instance.configuration AS 'configuration',
         ppl_model.id AS 'workflowId',
         ppl_model.description AS 'description',
         ppl_model.name AS 'workflowTitle',
@@ -66,13 +69,14 @@ class WorkflowGraph(object):
 
             graph["activity"] = dict()
             graph["activity"]["status"] = determine_status(row['status'])
+            graph["activity"]["configuration"] = parse_config(row['configuration'])
             graph["activity"]["type"] = "StepExecution"
             graph["activity"]["title"] = str(row["stepTitle"])
 
             app_logger.info('Construct provenance information for Step{0}.' .format(row['stepId']))
 
             workflow_list.append(workflow_graph)
-        return graph
+        # return graph
 
     # @staticmethod
     # def fetch_steps_sequence(db_cursor, graph):
@@ -97,6 +101,21 @@ class WorkflowGraph(object):
     #     return graph
 
 
+def parse_config(config):
+    """Parse metadata specific configuration."""
+    data = ''
+    try:
+        soup = xmltodict.parse(config)
+        base = soup["object-stream"]["MasterConfigObject"]["configurations"]["entry"]
+        if len(base) is 1:
+            data = HTMLParser().unescape(str(base["string"][1]))
+        else:
+            app_logger.info('Config information cannot be extracted.')
+        return data
+    except Exception as error:
+        app_logger.error('Something is wrong: {0}'.format(error))
+
+
 def workflow_get_output():
     """Construct the Ouput for the Get request."""
     data = WorkflowGraph()
@@ -105,8 +124,8 @@ def workflow_get_output():
         result = workflow_graph
     elif len(workflow_graph) == 0:
         if empty_workflows_DB() == 0:
-            result = 'Empty'
+            result = []
         else:
             result = None
-    app_logger.info('Constructed Output for UnifiedViews Workflow metadata enrichment finalized and set to API.')
+    app_logger.info('Constructed Output for UnifiedViews Workflow metadata enrichment finalized.')
     return result

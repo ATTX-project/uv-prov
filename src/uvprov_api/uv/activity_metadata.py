@@ -100,8 +100,8 @@ def activity_get_output():
         result = activity_graph
     elif len(activity_graph) == 0:
         if empty_activities_DB() == 0:
-            result = 'Empty'
+            result = []
         else:
             result = None
-    app_logger.info('Constructed Output for UnifiedViews Activity metadata enrichment finalized and set to API.')
+    app_logger.info('Constructed Output for UnifiedViews Activity metadata enrichment finalized.')
     return result

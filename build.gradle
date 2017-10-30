@@ -54,6 +54,7 @@ dependencies {
     python 'pypi:pbr:3.1.1'
     python 'pypi:pytz:2016.4'
     python 'pypi:pathlib:1.0.1'
+    python 'pypi:xmltodict:0.11.0'
     python 'pypi:falcon:1.2.0'
     python 'pypi:AMQPStorm:2.2.2'
     python 'pypi:schedule:0.4.3'
