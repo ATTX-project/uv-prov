@@ -1,11 +1,11 @@
 import pymysql as mysql
 from uvprov_api.utils.logs import app_logger
-import os
+from os import environ
 
-database = {'host': os.environ['DBHOST'] if 'DBHOST' in os.environ else "localhost",
-            'user': os.environ['DBUSER'] if 'DBUSER' in os.environ else "unified_views",
-            'pass': os.environ['DBKEY'] if 'DBKEY' in os.environ else "s00pers3cur3",
-            'db': os.environ['DBASE'] if 'DBASE' in os.environ else "unified_views"}
+database = {'host': environ['DBHOST'] if 'DBHOST' in environ else "localhost",
+            'user': environ['DBUSER'] if 'DBUSER' in environ else "unified_views",
+            'pass': environ['DBKEY'] if 'DBKEY' in environ else "s00pers3cur3",
+            'db': environ['DBASE'] if 'DBASE' in environ else "unified_views"}
 
 
 def connect_DB(db_conf=None):

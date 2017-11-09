@@ -7,9 +7,9 @@ import gunicorn.app.base
 from gunicorn.six import iteritems
 from uvprov_api.utils.logs import app_logger
 from uvprov_api.utils.messaging import prov_job
-import os
+from os import environ
 
-interval = {'timer': os.environ['QTIME'] if 'QTIME' in os.environ else 30}
+interval = {'timer': environ['QTIME'] if 'QTIME' in environ else 30}
 
 
 @click.group()
