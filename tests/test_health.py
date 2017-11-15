@@ -31,6 +31,8 @@ class TestProv(appHealthTest):
         httpretty.register_uri(httpretty.GET, "http://localhost:4301/health", status=200)
         result = self.simulate_get('/health')
         assert(result.status == falcon.HTTP_200)
+        httpretty.disable()
+        httpretty.reset()
 
 
 if __name__ == "__main__":

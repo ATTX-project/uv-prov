@@ -31,6 +31,8 @@ class TestApp(appTest):
         httpretty.register_uri(httpretty.GET, "http://localhost:4301/", status=404)
         response = self.simulate_get('/')
         assert(response.status_code == 404)
+        httpretty.disable()
+        httpretty.reset()
 
     # @httpretty.activate
     # def test_activity_ok(self):

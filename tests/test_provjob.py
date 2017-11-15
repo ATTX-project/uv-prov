@@ -39,6 +39,8 @@ class TestProv(appProvjobTest):
         httpretty.register_uri(httpretty.GET, "http://localhost:4301/provjob", status=202)
         result = self.simulate_get('/provjob')
         assert(result.status == falcon.HTTP_202)
+        httpretty.disable()
+        httpretty.reset()
 
 
 if __name__ == "__main__":

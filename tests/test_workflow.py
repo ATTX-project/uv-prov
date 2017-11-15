@@ -39,6 +39,8 @@ class ActivityTestCase(ActivityGetTest):
         httpretty.register_uri(httpretty.GET, "{0}/{1}/workflow".format(self.api, self.version), prov_data, status=200)
         result = self.simulate_get('/{0}/workflow'.format(self.version), body=prov_data)
         assert(result.status == falcon.HTTP_200)
+        httpretty.disable()
+        httpretty.reset()
 
 
 if __name__ == "__main__":
