@@ -1,0 +1,118 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'com.linkedin.pygradle', name: 'pygradle-plugin', version: '0.6.14'
+    }
+}
+apply plugin: 'maven'
+apply plugin: 'com.linkedin.python-cli'
+
+ext.version_nb = "2.0"
+
+version = "$version_nb"
+
+if (!project.hasProperty("env")) {
+    ext.artifactVersion = "${version_nb}-SNAPSHOT"
+} else if (project.env == "release"){
+    ext.artifactVersion = "${version_nb}"
+}
+
+ext {
+    imageRepo = "attx-dev"
+    artifactRepoPort = "8081"
+    pypiRepoPort = "5039"
+    serviceID = "org.uh.hulib.attx.services"
+}
+
+
+if (!project.hasProperty("artifactRepoURL")) {
+    ext.artifactRepoURL = "http://${imageRepo}:${artifactRepoPort}/repository/attx-releases"
+}
+
+if (!project.hasProperty("pypiURL")) {
+    ext.pypiURL = "http://${imageRepo}:${pypiRepoPort}/"
+}
+
+if (!project.hasProperty("artifactRepoUser")) {
+    ext.artifactRepoUser = ""
+}
+
+if (!project.hasProperty("artifactRepoPassword")) {
+    ext.artifactRepoPassword = ""
+}
+
+python {
+    testDir = file('tests')
+    forceVersion('pypi', 'pytz', '2016.4') // needed in Jenkins for some reason
+}
+// define an explicit installation sequence for the dependencies.
+project.tasks.findByName('installPythonRequirements').sorted = false
+
+dependencies {
+    python 'pypi:pbr:3.1.1'
+    python 'pypi:pytz:2016.4'
+    python 'pypi:pathlib:1.0.1'
+    python 'pypi:xmltodict:0.11.0'
+    python 'pypi:falcon:1.2.0'
+    python 'pypi:AMQPStorm:2.2.2'
+    python 'pypi:schedule:0.4.3'
+    python 'pypi:PyMySQL:0.7.11'
+    python 'pypi:gunicorn:19.7.1'
+    python 'pypi:pytest-html:1.12.0'
+    python 'pypi:click:6.7'
+    test 'pypi:pbr:3.1.1'
+    test 'pypi:pytz:2016.4'
+    test 'pypi:mock:2.0.0'
+    test 'pypi:testing.mysqld:1.4.0'
+    test 'pypi:httpretty:0.8.14'
+}
+
+// Succesfully running the tests requires a logs folder existing.
+task creatLogsFolder {
+    description = "Create logs folder."
+    doFirst {
+        mkdir('logs')
+    }
+}
+
+// the pytest taks depends on the logs folder and this specifies that.
+buildPex.dependsOn creatLogsFolder
+pytest.dependsOn creatLogsFolder
+
+repositories {
+    // using a local repository
+    ivy{
+        name 'pypi-local'
+        url "/home/user/pivy/"
+        layout 'pattern' , {
+            artifact '[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]'
+            ivy '[organisation]/[module]/[revision]/[module]-[revision].ivy'
+        }
+    }
+    // using a web repository
+    ivy{
+        name 'pypi-remote'
+        url "$pypiURL"
+        layout 'pattern' , {
+              artifact '[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]'
+              ivy '[organisation]/[module]/[revision]/[module]-[revision].ivy'
+        }
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "${artifactRepoURL}") {
+                  authentication(userName: "${artifactRepoUser}", password: "${artifactRepoPassword}")
+            }
+            pom.project {
+                version = "${artifactVersion}"
+                groupId = "${serviceID}"
+                description "UV Provenance service."
+            }
+        }
+    }
+}

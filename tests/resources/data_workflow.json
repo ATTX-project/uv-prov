@@ -1,0 +1,40 @@
+[
+    {
+     "provenance": {
+         "context": {
+             "activityID": "3",
+             "stepID": "2",
+             "workflowID": "2"
+         },
+         "agent": {
+             "role": "ETL",
+             "ID": "UnifiedViews"
+         },
+         "activity": {
+             "status": "success",
+             "type": "StepExecution",
+             "title": "uv-dpu-l-attx-uploader"
+         }
+     },
+     "payload": {}
+  },
+  {
+     "provenance": {
+         "context": {
+             "activityID": "4",
+             "stepID": "3",
+             "workflowID": "3"
+         },
+         "agent": {
+             "role": "ETL",
+             "ID": "UnifiedViews"
+         },
+         "activity": {
+             "status": "failed",
+             "type": "StepExecution",
+             "title": "uv-t-sparqlConstruct"
+         }
+     },
+     "payload": {}
+  }
+  ]
