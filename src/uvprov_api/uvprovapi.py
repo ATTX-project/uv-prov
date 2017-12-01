@@ -9,7 +9,7 @@ from uvprov_api.utils.logs import app_logger
 from uvprov_api.utils.messaging import prov_job
 from os import environ
 
-interval = {'timer': environ['QTIME'] if 'QTIME' in environ else 30}
+interval = {'timer': environ['QTIME'] if 'QTIME' in environ else 9}
 
 
 @click.group()
@@ -38,10 +38,16 @@ def server(host, port, log, workers):
 def publisher():
     """Consuming some messages."""
     app_logger.info('UVProvenance publisher started')
-    schedule.every(interval["timer"]).minutes.do(prov_job)
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    sint = 9
+    try:
+        sint = int(interval["timer"])
+    except ValueError:
+        pass
+    finally:
+        schedule.every(sint).minutes.do(prov_job)
+        while True:
+            schedule.run_pending()
+            time.sleep(1)
 
 
 class UVProvApplication(gunicorn.app.base.BaseApplication):
