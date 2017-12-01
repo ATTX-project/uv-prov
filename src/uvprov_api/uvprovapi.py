@@ -44,7 +44,7 @@ def publisher():
     except ValueError:
         pass
     finally:
-        schedule.every(sint).seconds.do(prov_job)
+        schedule.every(sint).minutes.do(prov_job)
         while True:
             schedule.run_pending()
             time.sleep(1)
