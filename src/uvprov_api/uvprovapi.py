@@ -9,7 +9,7 @@ from uvprov_api.utils.logs import app_logger
 from uvprov_api.utils.messaging import prov_job
 from os import environ
 
-interval = {'timer': environ['QTIME'] if 'QTIME' in environ else 30}
+interval = {'timer': environ['QTIME'] if 'QTIME' in environ else 9}
 
 
 @click.group()
