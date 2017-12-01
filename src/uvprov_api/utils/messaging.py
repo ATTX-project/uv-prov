@@ -42,7 +42,7 @@ def prov_job():
         app_logger.info('UV Provenance job executed.')
     except Exception as error:
         app_logger.error('Something with executing the prov_job: {0}'.format(error))
-        raise error
+        pass
     finally:
         if activity_data != (None or []):
             PUBLISHER.push(json.dumps(activity_data))
